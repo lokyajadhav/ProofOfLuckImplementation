@@ -67,13 +67,10 @@ class Blockchain{
 
     addNewBlock(blockMiner,newBlock) 
     {
-        if(blockMiner==this.blockMiner)
-        {
             chainSize = chainSize+1;
             newBlock.previousHash = this.obtainLatestBlock().hash;
             newBlock.hash = newBlock.computeHash();
             this.blockchain.push(newBlock);
-        }        
     }
 
     printChain()
@@ -159,7 +156,14 @@ const startMining = (nominated_miners) =>{
     let blockHash;
     do{
         let MaxRandomNum=nominated_miners[l++];
-        let miner_index=minerGeneratedRandom.get(MaxRandomNum);
+            for (let [key, value] of minerGeneratedRandom) {
+              if (value == MaxRandomNum)
+                miner_index= key;
+            }
+            //miner_index=[...minerGeneratedRandom].find(([key, value]) => MaxRandomNum === value)[0]
+          console.log("miner"+owners[miner_index])
+          
+       // let miner_index=minerGeneratedRandom.get(MaxRandomNum);
         let blockMiner=owners[miner_index];
        
         Chain.addNewBlock(blockMiner,
@@ -176,7 +180,6 @@ const startMining = (nominated_miners) =>{
 
     }while(!broadcastBlock(blockHash));
     minerGeneratedRandom.clear();
-
 }
 
 const Mine = () => {
